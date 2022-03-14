@@ -5,6 +5,8 @@ import com.polyscripts.contactManagement.repos.ContactEmployeeRepo;
 import com.polyscripts.contactManagement.repos.ContactFreelanceRepo;
 import com.polyscripts.contactManagement.repos.ContactRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,8 @@ public class ContactService  {
         this.contactFreelanceRepo = contactFreelanceRepo;
     }
 
-    public List<Contact> getAllContacts() {
-        return contactRepo.findAll();
+    public Page<Contact> getAllContactsWithPagination(int offset, int pageSize) {
+        Page<Contact> contacts = contactRepo.findAll(PageRequest.of(offset, pageSize));
+        return contacts;
     }
 }
