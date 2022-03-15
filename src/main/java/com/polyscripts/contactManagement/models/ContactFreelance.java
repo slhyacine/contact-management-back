@@ -14,7 +14,7 @@ import java.util.List;
 public class ContactFreelance extends Contact implements Serializable {
 
     @Column(nullable = false)
-    private Number tva;
+    private Long tva;
     @ManyToMany(mappedBy = "contacts")
     private List<Enterprise> enterprises = new ArrayList<>();
 

@@ -18,7 +18,7 @@ public class Enterprise implements Serializable {
     private Long id;
     private String name;
     private String address;
-    private Number tva;
+    private Long tva;
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
