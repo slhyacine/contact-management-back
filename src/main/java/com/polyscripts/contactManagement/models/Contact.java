@@ -17,7 +17,7 @@ public abstract class Contact implements Serializable {
     @Column(nullable = false, updatable = false)
     private Long id;
     private String name;
-    private String lastName;
+    private String lastname;
     private String address;
 
     public abstract List<Enterprise> getEnterprises();
