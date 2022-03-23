@@ -1,5 +1,6 @@
 package com.polyscripts.contactManagement.models;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,17 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Data
 @DiscriminatorValue("FREELANCE")
-public class ContactFreelance extends Contact implements Serializable {
+public class ContactFreelance extends Contact {
 
     @Column(nullable = false)
     private Long tva;
-    @ManyToMany(mappedBy = "contacts")
-    private List<Enterprise> enterprises = new ArrayList<>();
-
-    public List<Enterprise> getEnterprises() {
-        return enterprises;
-    }
 
 }

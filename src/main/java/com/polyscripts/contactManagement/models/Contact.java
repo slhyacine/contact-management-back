@@ -1,16 +1,19 @@
 package com.polyscripts.contactManagement.models;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
-@DiscriminatorColumn(name = "Type_Contact", discriminatorType = DiscriminatorType.STRING)
-public abstract class Contact implements Serializable {
+@Data
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+public class Contact {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +23,7 @@ public abstract class Contact implements Serializable {
     private String lastname;
     private String address;
 
-    public abstract List<Enterprise> getEnterprises();
+    @ManyToMany(mappedBy = "contacts")
+    private List<Enterprise> enterprises = new ArrayList<>();
 
 }
