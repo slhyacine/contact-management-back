@@ -22,6 +22,8 @@ public class Contact {
     private String name;
     private String lastname;
     private String address;
+    @Column(name = "type", insertable = false, updatable = false)
+    protected String type;
 
     @ManyToMany(mappedBy = "contacts")
     private List<Enterprise> enterprises = new ArrayList<>();
