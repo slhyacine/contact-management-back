@@ -14,7 +14,6 @@ import java.util.List;
 @DiscriminatorValue("FREELANCE")
 public class ContactFreelance extends Contact {
 
-    @Column(nullable = false)
     private Long tva;
 
 }

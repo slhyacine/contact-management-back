@@ -21,12 +21,12 @@ public class EnterpriseController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<Enterprise>> getAllContacts(
+    public Page<Enterprise> getAllContacts(
             @RequestParam int offset,
             @RequestParam int pageSize
     ) {
         Page<Enterprise> enterprises = enterpriseService.getAllEnterprisesWithPagination(offset, pageSize);
-        return new ResponseEntity<>(enterprises, HttpStatus.OK);
+        return enterprises;
     }
 
 }
