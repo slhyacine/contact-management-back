@@ -1,6 +1,8 @@
 package com.polyscripts.contactManagement.Services;
 
 import com.polyscripts.contactManagement.models.Contact;
+import com.polyscripts.contactManagement.models.ContactEmployee;
+import com.polyscripts.contactManagement.models.ContactFreelance;
 import com.polyscripts.contactManagement.repos.ContactEmployeeRepo;
 import com.polyscripts.contactManagement.repos.ContactFreelanceRepo;
 import com.polyscripts.contactManagement.repos.ContactRepo;
@@ -30,5 +32,13 @@ public class ContactService  {
     public Page<Contact> getAllContactsWithPagination(int offset, int pageSize) {
         Page<Contact> contacts = contactRepo.findAll(PageRequest.of(offset, pageSize));
         return contacts;
+    }
+
+    public ContactEmployee insertContactEmployee(ContactEmployee contactEmployee) {
+        return contactEmployeeRepo.save(contactEmployee);
+    }
+
+    public ContactFreelance insertContactFreelance(ContactFreelance contactFreelance) {
+        return contactFreelanceRepo.save(contactFreelance);
     }
 }

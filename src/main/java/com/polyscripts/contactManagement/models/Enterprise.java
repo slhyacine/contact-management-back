@@ -1,5 +1,6 @@
 package com.polyscripts.contactManagement.models;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
-public class Enterprise implements Serializable {
+@Data
+public class Enterprise {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

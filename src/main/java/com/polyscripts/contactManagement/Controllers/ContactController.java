@@ -1,32 +1,51 @@
 package com.polyscripts.contactManagement.Controllers;
 
+import com.polyscripts.contactManagement.DTOs.ContactEmployeeCreateDto;
+import com.polyscripts.contactManagement.DTOs.ContactFreelanceCreateDto;
 import com.polyscripts.contactManagement.Services.ContactService;
 import com.polyscripts.contactManagement.models.Contact;
+import com.polyscripts.contactManagement.models.ContactEmployee;
+import com.polyscripts.contactManagement.models.ContactFreelance;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/contacts")
 public class ContactController {
 
-    private final ContactService contactService;
+    @Autowired
+    private ContactService contactService;
 
-    public ContactController(ContactService contactService) {
-        this.contactService = contactService;
-    }
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping("/list")
-    public ResponseEntity<Page<Contact>> getAllContacts(
+    public Page<Contact> getAllContacts(
             @RequestParam int offset,
             @RequestParam int pageSize
     ) {
         Page<Contact> contacts = contactService.getAllContactsWithPagination(offset, pageSize);
-        return new ResponseEntity<>(contacts, HttpStatus.OK);
+        return contacts;
+    }
+
+    @PostMapping("/newEmployee")
+    public ContactEmployee insertContactEmployee(
+            @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto
+            ) {
+        ContactEmployee contactEmployee = modelMapper.map(contactEmployeeCreateDto, ContactEmployee.class);
+        return contactService.insertContactEmployee(contactEmployee);
+    }
+
+    @PostMapping("/newFreelance")
+    public ContactFreelance insertContactEmployee(
+            @RequestBody ContactFreelanceCreateDto contactFreelanceCreateDto
+    ) {
+        ContactFreelance contactFreelance = modelMapper.map(contactFreelanceCreateDto, ContactFreelance.class);
+        return contactService.insertContactFreelance(contactFreelance);
     }
 
 }
