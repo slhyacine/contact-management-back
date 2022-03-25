@@ -1,4 +1,4 @@
-package com.polyscripts.contactManagement.security.config;
+package com.polyscripts.contactManagement.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
