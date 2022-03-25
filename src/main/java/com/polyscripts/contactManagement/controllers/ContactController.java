@@ -41,7 +41,7 @@ public class ContactController {
 
     @PostMapping("/newEmployee")
     public ContactEmployee insertContactEmployee(
-            @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto
+            @Valid @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto
             ) {
         ContactEmployee contactEmployee = modelMapper.map(contactEmployeeCreateDto, ContactEmployee.class);
         return contactService.insertContactEmployee(contactEmployee);
@@ -55,7 +55,7 @@ public class ContactController {
         return contactService.insertContactFreelance(contactFreelance);
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteContact(@PathVariable Long id) {
         Optional<Contact> contact = contactService.findContactById(id);
         if (!contact.isPresent()) {

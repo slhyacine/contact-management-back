@@ -2,7 +2,6 @@ package com.polyscripts.contactManagement.models;
 
 import lombok.Data;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
