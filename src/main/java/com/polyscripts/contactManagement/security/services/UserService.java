@@ -1,6 +1,6 @@
 package com.polyscripts.contactManagement.security.services;
 
-import com.polyscripts.contactManagement.repos.UserRepo;
+import com.polyscripts.contactManagement.repositories.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

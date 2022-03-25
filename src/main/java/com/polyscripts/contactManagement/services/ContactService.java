@@ -1,17 +1,15 @@
-package com.polyscripts.contactManagement.Services;
+package com.polyscripts.contactManagement.services;
 
 import com.polyscripts.contactManagement.models.Contact;
 import com.polyscripts.contactManagement.models.ContactEmployee;
 import com.polyscripts.contactManagement.models.ContactFreelance;
-import com.polyscripts.contactManagement.repos.ContactEmployeeRepo;
-import com.polyscripts.contactManagement.repos.ContactFreelanceRepo;
-import com.polyscripts.contactManagement.repos.ContactRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.polyscripts.contactManagement.repositories.ContactEmployeeRepo;
+import com.polyscripts.contactManagement.repositories.ContactFreelanceRepo;
+import com.polyscripts.contactManagement.repositories.ContactRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,4 +39,13 @@ public class ContactService  {
     public ContactFreelance insertContactFreelance(ContactFreelance contactFreelance) {
         return contactFreelanceRepo.save(contactFreelance);
     }
+
+    public Optional<Contact> findContactById(Long id) {
+        return contactRepo.findOneById(id);
+    }
+
+    public void deleteContact(Contact contact) {
+        contactRepo.delete(contact);
+    }
+
 }

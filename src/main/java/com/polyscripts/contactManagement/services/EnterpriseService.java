@@ -1,7 +1,7 @@
-package com.polyscripts.contactManagement.Services;
+package com.polyscripts.contactManagement.services;
 
 import com.polyscripts.contactManagement.models.Enterprise;
-import com.polyscripts.contactManagement.repos.EnterpriseRepo;
+import com.polyscripts.contactManagement.repositories.EnterpriseRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

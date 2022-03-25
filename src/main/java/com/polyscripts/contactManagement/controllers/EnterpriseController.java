@@ -1,6 +1,6 @@
-package com.polyscripts.contactManagement.Controllers;
+package com.polyscripts.contactManagement.controllers;
 
-import com.polyscripts.contactManagement.Services.EnterpriseService;
+import com.polyscripts.contactManagement.services.EnterpriseService;
 import com.polyscripts.contactManagement.models.Enterprise;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
