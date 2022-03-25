@@ -1,4 +1,4 @@
-package com.polyscripts.contactManagement.repos;
+package com.polyscripts.contactManagement.repositories;
 
 import com.polyscripts.contactManagement.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

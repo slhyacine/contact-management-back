@@ -1,12 +1,7 @@
 package com.polyscripts.contactManagement.models;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import net.bytebuddy.asm.Advice;
-
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

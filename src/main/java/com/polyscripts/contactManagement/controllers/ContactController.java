@@ -1,16 +1,23 @@
-package com.polyscripts.contactManagement.Controllers;
+package com.polyscripts.contactManagement.controllers;
 
-import com.polyscripts.contactManagement.DTOs.ContactEmployeeCreateDto;
-import com.polyscripts.contactManagement.DTOs.ContactFreelanceCreateDto;
-import com.polyscripts.contactManagement.Services.ContactService;
+import com.polyscripts.contactManagement.dtos.ContactEmployeeCreateDto;
+import com.polyscripts.contactManagement.dtos.ContactFreelanceCreateDto;
+import com.polyscripts.contactManagement.exception.ContactNotFoundException;
+import com.polyscripts.contactManagement.services.ContactService;
 import com.polyscripts.contactManagement.models.Contact;
 import com.polyscripts.contactManagement.models.ContactEmployee;
 import com.polyscripts.contactManagement.models.ContactFreelance;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/contacts")
@@ -34,7 +41,7 @@ public class ContactController {
 
     @PostMapping("/newEmployee")
     public ContactEmployee insertContactEmployee(
-            @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto
+            @Valid @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto
             ) {
         ContactEmployee contactEmployee = modelMapper.map(contactEmployeeCreateDto, ContactEmployee.class);
         return contactService.insertContactEmployee(contactEmployee);
@@ -46,6 +53,16 @@ public class ContactController {
     ) {
         ContactFreelance contactFreelance = modelMapper.map(contactFreelanceCreateDto, ContactFreelance.class);
         return contactService.insertContactFreelance(contactFreelance);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteContact(@PathVariable Long id) {
+        Optional<Contact> contact = contactService.findContactById(id);
+        if (!contact.isPresent()) {
+            throw new ContactNotFoundException("There is no contact with id "+id);
+        }
+        contactService.deleteContact(contact.get());
+        return ResponseEntity.ok(1);
     }
 
 }
