@@ -70,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         HttpMethod.GET,
                         "/",
                         "/assets/**",
+                        "/webjars/**",
                         "/favicon.ico",
                         "/**/*.png",
                         "/**/*.gif",
@@ -83,7 +84,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/auth/login",
                         "/v2/api-docs",
                         "/swagger-resources/**",
-                        "/swagger-ui.html**"
+                        "/swagger-ui.html**",
+                        "/configuration/**"
                 )
                 .permitAll()
                 .anyRequest().authenticated()
