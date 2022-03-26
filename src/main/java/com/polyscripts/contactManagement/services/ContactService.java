@@ -48,4 +48,10 @@ public class ContactService  {
         contactRepo.delete(contact);
     }
 
+    public Optional<ContactEmployee> findEmployeeById(Long id) { return contactEmployeeRepo.findContactEmployeeById(id); }
+
+    public Optional<ContactFreelance> findFreelanceById(Long id) { return contactFreelanceRepo.findContactFreelanceById(id); }
+
+
+
 }

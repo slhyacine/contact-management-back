@@ -63,4 +63,42 @@ public class ContactController {
         return ResponseEntity.ok(1);
     }
 
+    @GetMapping("/{id}")
+    public Contact getContact(@PathVariable Long id) {
+        Optional<Contact> contact = contactService.findContactById(id);
+        if (!contact.isPresent()) {
+            throw new ResourceNotFoundException("There is no contact with id "+id);
+        }
+        return contact.get();
+    }
+
+    @PutMapping("/{id}/editEmployee")
+    public ContactEmployee updateContactEmployee(
+            @PathVariable Long id,
+            @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto) {
+        Optional<ContactEmployee> employee = contactService.findEmployeeById(id);
+        if (!employee.isPresent()) {
+            throw new ResourceNotFoundException("There is no contact with id "+id);
+        }
+        employee.get().setName(contactEmployeeCreateDto.getName());
+        employee.get().setLastname(contactEmployeeCreateDto.getLastname());
+        employee.get().setAddress(contactEmployeeCreateDto.getAddress());
+        return contactService.insertContactEmployee(employee.get());
+    }
+
+    @PutMapping("/{id}/editFreelance")
+    public ContactFreelance updateContactFreelance(
+            @PathVariable Long id,
+            @RequestBody ContactFreelanceCreateDto contactFreelanceCreateDto) {
+        Optional<ContactFreelance> employee = contactService.findFreelanceById(id);
+        if (!employee.isPresent()) {
+            throw new ResourceNotFoundException("There is no contact with id "+id);
+        }
+        employee.get().setName(contactFreelanceCreateDto.getName());
+        employee.get().setLastname(contactFreelanceCreateDto.getLastname());
+        employee.get().setAddress(contactFreelanceCreateDto.getAddress());
+        employee.get().setTva(contactFreelanceCreateDto.getTva());
+        return contactService.insertContactFreelance(employee.get());
+    }
+
 }

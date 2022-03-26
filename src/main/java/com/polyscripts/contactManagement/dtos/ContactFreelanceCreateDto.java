@@ -8,5 +8,5 @@ public class ContactFreelanceCreateDto {
     private String name;
     private String lastname;
     private String address;
-    private String tva;
+    private Long tva;
 }
