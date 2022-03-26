@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class EnterpriseService {
 
@@ -23,5 +25,9 @@ public class EnterpriseService {
     public Enterprise insertEnterprise(Enterprise enterprise) {
         return enterpriseRepo.save(enterprise);
     }
+
+    public Optional<Enterprise> findEnterpriseById(Long id) { return enterpriseRepo.findEnterpriseById(id);  }
+
+    public void deleteEnterprise(Enterprise enterprise) { enterpriseRepo.delete(enterprise); }
 
 }
