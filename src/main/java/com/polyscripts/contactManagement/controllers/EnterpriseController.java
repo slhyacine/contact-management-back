@@ -53,4 +53,28 @@ public class EnterpriseController {
         return ResponseEntity.ok(1);
     }
 
+    @GetMapping("/{id}")
+    public Enterprise getEnterprise(@PathVariable Long id) {
+        Optional<Enterprise> enterprise = enterpriseService.findEnterpriseById(id);
+        if (!enterprise.isPresent()) {
+            throw new ResourceNotFoundException("There is no enterprise with id : "+id);
+        }
+        return enterprise.get();
+    }
+
+    @PutMapping("/{id}")
+    public Enterprise updateEnterprise(
+            @PathVariable Long id,
+            @RequestBody EnterpriseCreateDto enterpriseCreateDto
+    ) {
+        Optional<Enterprise> enterprise = enterpriseService.findEnterpriseById(id);
+        if (!enterprise.isPresent()) {
+            throw new ResourceNotFoundException("There is no enterprise with id : "+id);
+        }
+        enterprise.get().setName(enterpriseCreateDto.getName());
+        enterprise.get().setAddress(enterpriseCreateDto.getAddress());
+        enterprise.get().setTva(enterpriseCreateDto.getTva());
+        return enterpriseService.insertEnterprise(enterprise.get());
+    }
+
 }
