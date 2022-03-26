@@ -20,4 +20,8 @@ public class EnterpriseService {
         return enterprises;
     }
 
+    public Enterprise insertEnterprise(Enterprise enterprise) {
+        return enterpriseRepo.save(enterprise);
+    }
+
 }
