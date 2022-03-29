@@ -1,6 +1,7 @@
 package com.polyscripts.contactManagement.controllers;
 
 import com.polyscripts.contactManagement.dtos.EnterpriseCreateDto;
+import com.polyscripts.contactManagement.dtos.EnterpriseGetDto;
 import com.polyscripts.contactManagement.exception.ResourceNotFoundException;
 import com.polyscripts.contactManagement.services.EnterpriseService;
 import com.polyscripts.contactManagement.models.Enterprise;
@@ -54,12 +55,13 @@ public class EnterpriseController {
     }
 
     @GetMapping("/{id}")
-    public Enterprise getEnterprise(@PathVariable Long id) {
+    public EnterpriseGetDto getEnterprise(@PathVariable Long id) {
         Optional<Enterprise> enterprise = enterpriseService.findEnterpriseById(id);
         if (!enterprise.isPresent()) {
             throw new ResourceNotFoundException("There is no enterprise with id : "+id);
         }
-        return enterprise.get();
+        EnterpriseGetDto enterpriseGetDto = modelMapper.map(enterprise.get(), EnterpriseGetDto.class);
+        return enterpriseGetDto;
     }
 
     @PutMapping("/{id}")
