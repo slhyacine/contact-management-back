@@ -1,7 +1,6 @@
 package com.polyscripts.contactManagement.controllers;
 
-import com.polyscripts.contactManagement.dtos.ContactEmployeeCreateDto;
-import com.polyscripts.contactManagement.dtos.ContactFreelanceCreateDto;
+import com.polyscripts.contactManagement.dtos.*;
 import com.polyscripts.contactManagement.exception.ResourceNotFoundException;
 import com.polyscripts.contactManagement.services.ContactService;
 import com.polyscripts.contactManagement.models.Contact;
@@ -15,7 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/contacts")
@@ -29,12 +30,19 @@ public class ContactController {
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
-    public Page<Contact> getAllContacts(
+    public ListContactDto getAllContacts(
             @RequestParam int offset,
             @RequestParam int pageSize
     ) {
-        Page<Contact> contacts = contactService.getAllContactsWithPagination(offset, pageSize);
-        return contacts;
+        Page<Contact> result = contactService.getAllContactsWithPagination(offset, pageSize);
+        List<ContactListDto> contacts = result.getContent().stream()
+                .map(contact -> modelMapper.map(contact, ContactListDto.class))
+                .collect(Collectors.toList());
+
+        ListContactDto listContactDto = new ListContactDto();
+        listContactDto.setTotalElements(result.getTotalElements());
+        listContactDto.setContent(contacts);
+        return listContactDto;
     }
 
     @PostMapping("/newEmployee")

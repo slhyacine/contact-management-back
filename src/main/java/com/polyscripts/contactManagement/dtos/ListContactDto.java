@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ListEnterprisesDto {
+public class ListContactDto {
 
-    private List<EnterpriseListDto> content;
+    private List<ContactListDto> content;
     private Long totalElements;
 
 }

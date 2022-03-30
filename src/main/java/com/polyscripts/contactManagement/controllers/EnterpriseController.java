@@ -3,7 +3,7 @@ package com.polyscripts.contactManagement.controllers;
 import com.polyscripts.contactManagement.dtos.EnterpriseCreateDto;
 import com.polyscripts.contactManagement.dtos.EnterpriseGetDto;
 import com.polyscripts.contactManagement.dtos.EnterpriseListDto;
-import com.polyscripts.contactManagement.dtos.ListEnterprisesDto;
+import com.polyscripts.contactManagement.dtos.ListEnterpriseDto;
 import com.polyscripts.contactManagement.exception.ResourceNotFoundException;
 import com.polyscripts.contactManagement.services.EnterpriseService;
 import com.polyscripts.contactManagement.models.Enterprise;
@@ -31,7 +31,7 @@ public class EnterpriseController {
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ListEnterprisesDto getAllContacts(
+    public ListEnterpriseDto getAllContacts(
             @RequestParam int offset,
             @RequestParam int pageSize
     ) {
@@ -40,10 +40,10 @@ public class EnterpriseController {
                 .map(enterprise -> modelMapper.map(enterprise, EnterpriseListDto.class))
                 .collect(Collectors.toList());
 
-        ListEnterprisesDto listEnterprisesDto = new ListEnterprisesDto();
-        listEnterprisesDto.setTotalElements(result.getTotalElements());
-        listEnterprisesDto.setContent(enterprises);
-        return listEnterprisesDto;
+        ListEnterpriseDto listEnterpriseDto = new ListEnterpriseDto();
+        listEnterpriseDto.setTotalElements(result.getTotalElements());
+        listEnterpriseDto.setContent(enterprises);
+        return listEnterpriseDto;
     }
 
     @PostMapping("/new")
