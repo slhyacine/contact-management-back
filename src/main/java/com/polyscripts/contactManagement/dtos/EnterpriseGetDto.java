@@ -14,11 +14,4 @@ public class EnterpriseGetDto {
     private Long tva;
     private List<ContactGetDto> contacts;
 
-//    public EnterpriseGetDto(Enterprise enterprise) {
-//        this.name = enterprise.getName();
-//        this.address = enterprise.getAddress();
-//        this.tva = enterprise.getTva();
-//        enterprise.getContacts().forEach(contact -> {  });
-//    }
-
 }

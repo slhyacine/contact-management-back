@@ -2,6 +2,8 @@ package com.polyscripts.contactManagement.controllers;
 
 import com.polyscripts.contactManagement.dtos.EnterpriseCreateDto;
 import com.polyscripts.contactManagement.dtos.EnterpriseGetDto;
+import com.polyscripts.contactManagement.dtos.EnterpriseListDto;
+import com.polyscripts.contactManagement.dtos.ListEnterprisesDto;
 import com.polyscripts.contactManagement.exception.ResourceNotFoundException;
 import com.polyscripts.contactManagement.services.EnterpriseService;
 import com.polyscripts.contactManagement.models.Enterprise;
@@ -12,9 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/enterprises")
@@ -28,12 +31,19 @@ public class EnterpriseController {
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<Enterprise> getAllContacts(
+    public ListEnterprisesDto getAllContacts(
             @RequestParam int offset,
             @RequestParam int pageSize
     ) {
-        Page<Enterprise> enterprises = enterpriseService.getAllEnterprisesWithPagination(offset, pageSize);
-        return enterprises;
+        Page<Enterprise> result = enterpriseService.getAllEnterprisesWithPagination(offset, pageSize);
+        List<EnterpriseListDto> enterprises = result.getContent().stream()
+                .map(enterprise -> modelMapper.map(enterprise, EnterpriseListDto.class))
+                .collect(Collectors.toList());
+
+        ListEnterprisesDto listEnterprisesDto = new ListEnterprisesDto();
+        listEnterprisesDto.setTotalElements(result.getTotalElements());
+        listEnterprisesDto.setContent(enterprises);
+        return listEnterprisesDto;
     }
 
     @PostMapping("/new")
