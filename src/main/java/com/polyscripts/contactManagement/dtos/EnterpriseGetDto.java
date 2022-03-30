@@ -12,6 +12,6 @@ public class EnterpriseGetDto {
     private String name;
     private String address;
     private Long tva;
-    private List<ContactGetDto> contacts;
+    private List<ContactListDto> contacts;
 
 }

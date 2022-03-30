@@ -72,12 +72,13 @@ public class ContactController {
     }
 
     @GetMapping("/{id}")
-    public Contact getContact(@PathVariable Long id) {
+    public ContactGetDto getContact(@PathVariable Long id) {
         Optional<Contact> contact = contactService.findContactById(id);
         if (!contact.isPresent()) {
             throw new ResourceNotFoundException("There is no contact with id "+id);
         }
-        return contact.get();
+        ContactGetDto contactGetDto = modelMapper.map(contact.get(), ContactGetDto.class);
+        return contactGetDto;
     }
 
     @PutMapping("/{id}/editEmployee")
