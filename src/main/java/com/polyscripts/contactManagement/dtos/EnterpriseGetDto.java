@@ -1,7 +1,5 @@
 package com.polyscripts.contactManagement.dtos;
 
-import com.polyscripts.contactManagement.models.Contact;
-import com.polyscripts.contactManagement.models.Enterprise;
 import lombok.Data;
 
 import java.util.List;

@@ -1,12 +1,17 @@
 package com.polyscripts.contactManagement.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 public class Contact {
 

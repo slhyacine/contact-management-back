@@ -5,13 +5,17 @@ import com.polyscripts.contactManagement.dtos.EnterpriseGetDto;
 import com.polyscripts.contactManagement.dtos.EnterpriseListDto;
 import com.polyscripts.contactManagement.dtos.ListEnterpriseDto;
 import com.polyscripts.contactManagement.exception.ResourceNotFoundException;
+import com.polyscripts.contactManagement.models.Contact;
+import com.polyscripts.contactManagement.services.ContactService;
 import com.polyscripts.contactManagement.services.EnterpriseService;
 import com.polyscripts.contactManagement.models.Enterprise;
+import net.bytebuddy.asm.Advice;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,6 +29,9 @@ public class EnterpriseController {
 
     @Autowired
     private EnterpriseService enterpriseService;
+
+    @Autowired
+    private ContactService contactService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -86,6 +93,23 @@ public class EnterpriseController {
         enterprise.get().setName(enterpriseCreateDto.getName());
         enterprise.get().setAddress(enterpriseCreateDto.getAddress());
         enterprise.get().setTva(enterpriseCreateDto.getTva());
+        return enterpriseService.insertEnterprise(enterprise.get());
+    }
+
+    @DeleteMapping("/{enterpriseId}/contacts/{contacId}/delete")
+    public Enterprise deleteContactFromEnterprise(
+            @PathVariable Long enterpriseId,
+            @PathVariable Long contacId
+    ) {
+        Optional<Enterprise> enterprise = enterpriseService.findEnterpriseById(enterpriseId);
+        if (!enterprise.isPresent()) {
+            throw new ResourceNotFoundException("There is no enterprise with id : "+enterpriseId);
+        }
+        Optional<Contact> contact = contactService.findContactById(contacId);
+        if (!contact.isPresent()) {
+            throw new ResourceNotFoundException("There is no contact with id : " + contacId);
+        }
+        enterprise.get().removeContact(contact.get());
         return enterpriseService.insertEnterprise(enterprise.get());
     }
 

@@ -1,7 +1,10 @@
 package com.polyscripts.contactManagement.services;
 
+import com.polyscripts.contactManagement.models.Contact;
 import com.polyscripts.contactManagement.models.Enterprise;
 import com.polyscripts.contactManagement.repositories.EnterpriseRepo;
+import net.bytebuddy.asm.Advice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -11,11 +14,8 @@ import java.util.Optional;
 @Service
 public class EnterpriseService {
 
-    private final EnterpriseRepo enterpriseRepo;
-
-    public EnterpriseService(EnterpriseRepo enterpriseRepo) {
-        this.enterpriseRepo = enterpriseRepo;
-    }
+    @Autowired
+    private EnterpriseRepo enterpriseRepo;
 
     public Page<Enterprise> getAllEnterprisesWithPagination(int offset, int pageSize) {
         Page<Enterprise> enterprises = enterpriseRepo.findAll(PageRequest.of(offset, pageSize));
