@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,6 +50,7 @@ public class ContactService  {
 
     public Optional<ContactFreelance> findFreelanceById(Long id) { return contactFreelanceRepo.findContactFreelanceById(id); }
 
-
-
+    public Page<Contact> filterContactsByNameAndLastname(String term) {
+        return this.contactRepo.findTop3ByNameOrLastName(term, PageRequest.of(0, 5));
+    }
 }

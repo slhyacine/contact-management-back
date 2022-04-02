@@ -46,6 +46,7 @@ public class ContactController {
     }
 
     @PostMapping("/newEmployee")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ContactEmployee insertContactEmployee(
             @Valid @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto
             ) {
@@ -54,6 +55,7 @@ public class ContactController {
     }
 
     @PostMapping("/newFreelance")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ContactFreelance insertContactEmployee(
             @RequestBody ContactFreelanceCreateDto contactFreelanceCreateDto
     ) {
@@ -62,6 +64,7 @@ public class ContactController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteContact(@PathVariable Long id) {
         Optional<Contact> contact = contactService.findContactById(id);
         if (!contact.isPresent()) {
@@ -72,6 +75,7 @@ public class ContactController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public ContactGetDto getContact(@PathVariable Long id) {
         Optional<Contact> contact = contactService.findContactById(id);
         if (!contact.isPresent()) {
@@ -82,6 +86,7 @@ public class ContactController {
     }
 
     @PutMapping("/{id}/editEmployee")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ContactEmployee updateContactEmployee(
             @PathVariable Long id,
             @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto) {
@@ -96,6 +101,7 @@ public class ContactController {
     }
 
     @PutMapping("/{id}/editFreelance")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ContactFreelance updateContactFreelance(
             @PathVariable Long id,
             @RequestBody ContactFreelanceCreateDto contactFreelanceCreateDto) {
@@ -108,6 +114,18 @@ public class ContactController {
         employee.get().setAddress(contactFreelanceCreateDto.getAddress());
         employee.get().setTva(contactFreelanceCreateDto.getTva());
         return contactService.insertContactFreelance(employee.get());
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<ContactAutocompleteDto> filterContactsByNameAndLastname(
+            @RequestParam String term
+    ) {
+        Page<Contact> contacts = contactService.filterContactsByNameAndLastname(term);
+        List<ContactAutocompleteDto> filteredContacts = contacts.stream()
+                .map(contact -> modelMapper.map(contact, ContactAutocompleteDto.class))
+                .collect(Collectors.toList());
+        return filteredContacts;
     }
 
 }

@@ -1,9 +1,6 @@
 package com.polyscripts.contactManagement.controllers;
 
-import com.polyscripts.contactManagement.dtos.EnterpriseCreateDto;
-import com.polyscripts.contactManagement.dtos.EnterpriseGetDto;
-import com.polyscripts.contactManagement.dtos.EnterpriseListDto;
-import com.polyscripts.contactManagement.dtos.ListEnterpriseDto;
+import com.polyscripts.contactManagement.dtos.*;
 import com.polyscripts.contactManagement.exception.ResourceNotFoundException;
 import com.polyscripts.contactManagement.models.Contact;
 import com.polyscripts.contactManagement.services.ContactService;
@@ -54,14 +51,18 @@ public class EnterpriseController {
     }
 
     @PostMapping("/new")
-    public Enterprise insertEnterprise(
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public EnterpriseGetDto insertEnterprise(
             @Valid @RequestBody EnterpriseCreateDto enterpriseCreateDto
             ) {
         Enterprise enterprise = modelMapper.map(enterpriseCreateDto, Enterprise.class);
-        return enterpriseService.insertEnterprise(enterprise);
+        Enterprise savedEnterprise = enterpriseService.insertEnterprise(enterprise);
+        EnterpriseGetDto enterpriseGetDto = modelMapper.map(savedEnterprise, EnterpriseGetDto.class);
+        return enterpriseGetDto;
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteEnterprise(@PathVariable Long id) {
         Optional<Enterprise> enterprise = enterpriseService.findEnterpriseById(id);
         if (!enterprise.isPresent()) {
@@ -82,7 +83,8 @@ public class EnterpriseController {
     }
 
     @PutMapping("/{id}")
-    public Enterprise updateEnterprise(
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public EnterpriseGetDto updateEnterprise(
             @PathVariable Long id,
             @RequestBody EnterpriseCreateDto enterpriseCreateDto
     ) {
@@ -93,11 +95,14 @@ public class EnterpriseController {
         enterprise.get().setName(enterpriseCreateDto.getName());
         enterprise.get().setAddress(enterpriseCreateDto.getAddress());
         enterprise.get().setTva(enterpriseCreateDto.getTva());
-        return enterpriseService.insertEnterprise(enterprise.get());
+        Enterprise savedEnterprise = enterpriseService.insertEnterprise(enterprise.get());
+        EnterpriseGetDto enterpriseGetDto = modelMapper.map(savedEnterprise, EnterpriseGetDto.class);
+        return enterpriseGetDto;
     }
 
     @DeleteMapping("/{enterpriseId}/contacts/{contacId}/delete")
-    public Enterprise deleteContactFromEnterprise(
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public EnterpriseGetDto deleteContactFromEnterprise(
             @PathVariable Long enterpriseId,
             @PathVariable Long contacId
     ) {
@@ -110,7 +115,29 @@ public class EnterpriseController {
             throw new ResourceNotFoundException("There is no contact with id : " + contacId);
         }
         enterprise.get().removeContact(contact.get());
-        return enterpriseService.insertEnterprise(enterprise.get());
+        Enterprise savedEnterprise = enterpriseService.insertEnterprise(enterprise.get());
+        EnterpriseGetDto enterpriseGetDto = modelMapper.map(savedEnterprise, EnterpriseGetDto.class);
+        return enterpriseGetDto;
+    }
+
+    @PostMapping("/{enterpriseId}/addContact")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public EnterpriseGetDto addContactToEnterprise(
+            @PathVariable Long enterpriseId,
+            @RequestBody AddContactToEnterpriseDto addContactToEnterpriseDto
+    ) {
+        Optional<Enterprise> enterprise = enterpriseService.findEnterpriseById(enterpriseId);
+        if (!enterprise.isPresent()) {
+            throw new ResourceNotFoundException("There is no enterprise with id : "+enterpriseId);
+        }
+        Optional<Contact> contact = contactService.findContactById(addContactToEnterpriseDto.getContactId());
+        if (!contact.isPresent()) {
+            throw new ResourceNotFoundException("There is no contact with id : " + addContactToEnterpriseDto.getContactId());
+        }
+        enterprise.get().addContact(contact.get());
+        Enterprise savedEnterprise = enterpriseService.insertEnterprise(enterprise.get());
+        EnterpriseGetDto enterpriseGetDto = modelMapper.map(savedEnterprise, EnterpriseGetDto.class);
+        return enterpriseGetDto;
     }
 
 }
