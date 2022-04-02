@@ -1,7 +1,6 @@
 package com.polyscripts.contactManagement.controllers;
 
-import com.polyscripts.contactManagement.dtos.ContactEmployeeCreateDto;
-import com.polyscripts.contactManagement.dtos.ContactFreelanceCreateDto;
+import com.polyscripts.contactManagement.dtos.*;
 import com.polyscripts.contactManagement.exception.ResourceNotFoundException;
 import com.polyscripts.contactManagement.services.ContactService;
 import com.polyscripts.contactManagement.models.Contact;
@@ -15,7 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/contacts")
@@ -29,15 +30,23 @@ public class ContactController {
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
-    public Page<Contact> getAllContacts(
+    public ListContactDto getAllContacts(
             @RequestParam int offset,
             @RequestParam int pageSize
     ) {
-        Page<Contact> contacts = contactService.getAllContactsWithPagination(offset, pageSize);
-        return contacts;
+        Page<Contact> result = contactService.getAllContactsWithPagination(offset, pageSize);
+        List<ContactListDto> contacts = result.getContent().stream()
+                .map(contact -> modelMapper.map(contact, ContactListDto.class))
+                .collect(Collectors.toList());
+
+        ListContactDto listContactDto = new ListContactDto();
+        listContactDto.setTotalElements(result.getTotalElements());
+        listContactDto.setContent(contacts);
+        return listContactDto;
     }
 
     @PostMapping("/newEmployee")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ContactEmployee insertContactEmployee(
             @Valid @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto
             ) {
@@ -46,6 +55,7 @@ public class ContactController {
     }
 
     @PostMapping("/newFreelance")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ContactFreelance insertContactEmployee(
             @RequestBody ContactFreelanceCreateDto contactFreelanceCreateDto
     ) {
@@ -54,6 +64,7 @@ public class ContactController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteContact(@PathVariable Long id) {
         Optional<Contact> contact = contactService.findContactById(id);
         if (!contact.isPresent()) {
@@ -64,15 +75,18 @@ public class ContactController {
     }
 
     @GetMapping("/{id}")
-    public Contact getContact(@PathVariable Long id) {
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+    public ContactGetDto getContact(@PathVariable Long id) {
         Optional<Contact> contact = contactService.findContactById(id);
         if (!contact.isPresent()) {
             throw new ResourceNotFoundException("There is no contact with id "+id);
         }
-        return contact.get();
+        ContactGetDto contactGetDto = modelMapper.map(contact.get(), ContactGetDto.class);
+        return contactGetDto;
     }
 
     @PutMapping("/{id}/editEmployee")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ContactEmployee updateContactEmployee(
             @PathVariable Long id,
             @RequestBody ContactEmployeeCreateDto contactEmployeeCreateDto) {
@@ -87,6 +101,7 @@ public class ContactController {
     }
 
     @PutMapping("/{id}/editFreelance")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ContactFreelance updateContactFreelance(
             @PathVariable Long id,
             @RequestBody ContactFreelanceCreateDto contactFreelanceCreateDto) {
@@ -99,6 +114,18 @@ public class ContactController {
         employee.get().setAddress(contactFreelanceCreateDto.getAddress());
         employee.get().setTva(contactFreelanceCreateDto.getTva());
         return contactService.insertContactFreelance(employee.get());
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<ContactAutocompleteDto> filterContactsByNameAndLastname(
+            @RequestParam String term
+    ) {
+        Page<Contact> contacts = contactService.filterContactsByNameAndLastname(term);
+        List<ContactAutocompleteDto> filteredContacts = contacts.stream()
+                .map(contact -> modelMapper.map(contact, ContactAutocompleteDto.class))
+                .collect(Collectors.toList());
+        return filteredContacts;
     }
 
 }

@@ -6,26 +6,24 @@ import com.polyscripts.contactManagement.models.ContactFreelance;
 import com.polyscripts.contactManagement.repositories.ContactEmployeeRepo;
 import com.polyscripts.contactManagement.repositories.ContactFreelanceRepo;
 import com.polyscripts.contactManagement.repositories.ContactRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ContactService  {
 
-    private final ContactRepo contactRepo;
-    private final ContactEmployeeRepo contactEmployeeRepo;
-    private final ContactFreelanceRepo contactFreelanceRepo;
-
-    public ContactService(ContactRepo contactRepo,
-                          ContactEmployeeRepo contactEmployeeRepo,
-                          ContactFreelanceRepo contactFreelanceRepo) {
-        this.contactRepo = contactRepo;
-        this.contactEmployeeRepo = contactEmployeeRepo;
-        this.contactFreelanceRepo = contactFreelanceRepo;
-    }
+    @Autowired
+    private ContactRepo contactRepo;
+    @Autowired
+    private ContactEmployeeRepo contactEmployeeRepo;
+    @Autowired
+    private ContactFreelanceRepo contactFreelanceRepo;
 
     public Page<Contact> getAllContactsWithPagination(int offset, int pageSize) {
         Page<Contact> contacts = contactRepo.findAll(PageRequest.of(offset, pageSize));
@@ -52,6 +50,7 @@ public class ContactService  {
 
     public Optional<ContactFreelance> findFreelanceById(Long id) { return contactFreelanceRepo.findContactFreelanceById(id); }
 
-
-
+    public Page<Contact> filterContactsByNameAndLastname(String term) {
+        return this.contactRepo.findTop3ByNameOrLastName(term, PageRequest.of(0, 5));
+    }
 }
