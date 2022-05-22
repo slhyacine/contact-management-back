@@ -3,6 +3,8 @@ package com.polyscripts.contactManagement.services;
 import com.polyscripts.contactManagement.models.Contact;
 import com.polyscripts.contactManagement.models.Enterprise;
 import com.polyscripts.contactManagement.repositories.EnterpriseRepo;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class EnterpriseService {
 
     @Autowired

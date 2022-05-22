@@ -6,6 +6,9 @@ import com.polyscripts.contactManagement.models.ContactFreelance;
 import com.polyscripts.contactManagement.repositories.ContactEmployeeRepo;
 import com.polyscripts.contactManagement.repositories.ContactFreelanceRepo;
 import com.polyscripts.contactManagement.repositories.ContactRepo;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class ContactService  {
 
     @Autowired
